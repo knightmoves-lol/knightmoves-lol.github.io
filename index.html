@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>title</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css"
+        integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU" crossorigin="anonymous">
+
+</head>
+
+<body>
+    <!-- page content -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous">
+        </script>
+    <script src="./chess.js"></script>
+    <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"
+        integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD"
+        crossorigin="anonymous"></script>
+    <h1> Hello World!</h1>
+
+    <div id="myBoard" style="width: 400px"></div>
+
+    <script>
+        
+        function legal_knight_move(src, target){
+            src_file = src.charCodeAt(0)
+            target_file = target.charCodeAt(0)
+
+            src_row = src.charCodeAt(1)
+            target_row = target.charCodeAt(1)
+
+            if (
+                ((src_row == target_row + 2) && (src_file == target_file + 1)) || 
+                ((src_row == target_row + 2) && (src_file == target_file - 1)) || 
+                ((src_row == target_row - 2) && (src_file == target_file + 1)) || 
+                ((src_row == target_row - 2) && (src_file == target_file - 1)) || 
+
+                ((src_row == target_row + 1) && (src_file == target_file + 2)) || 
+                ((src_row == target_row + 1) && (src_file == target_file - 2)) || 
+                ((src_row == target_row - 1) && (src_file == target_file + 2)) || 
+                ((src_row == target_row - 1) && (src_file == target_file - 2)) ) {
+                    return true;
+            }
+            return false;
+
+        }
+
+        function legal_queen_move(src, target){
+            src_file = src.charCodeAt(0)
+            target_file = target.charCodeAt(0)
+
+            src_row = src.charCodeAt(1)
+            target_row = target.charCodeAt(1)
+
+            row_delta = src_row-target_row
+            file_delta = src_file-target_file
+
+            if(
+                (row_delta == file_delta) || 
+                (row_delta == -1*file_delta) ||
+                (row_delta == 0) ||
+                (file_delta == 0)
+            ){
+                return true;
+            }
+            return false;
+
+        }
+
+
+        // // --- Begin Example JS --------------------------------------------------------
+        
+
+        // // --- End Example JS ----------------------------------------------------------
+        // --- Begin Example JS --------------------------------------------------------
+        // NOTE: this example uses the chess.js library:
+        // https://github.com/jhlywa/chess.js
+        // var start_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+        // var start_fen = '7n/8/8/3Q4/8/8/8/8 w KQkq - 0 1'
+        // var board = null
+        // var game = new Chess(start_fen)
+        // var $status = $('#status')
+        // var $fen = $('#fen')
+        // var $pgn = $('#pgn')
+
+        function onDragStart(source, piece, position, orientation) {
+            if(source != knight_position){
+                return false;
+            }
+            // // do not pick up pieces if the game is over
+            // if (game.game_over()) return false
+
+            // // only pick up pieces for the side to move
+            // if ((game.turn() === 'w' && piece.search(/^b/) !== -1) ||
+            //     (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
+            //     return false
+            // }
+            return true;
+        }
+
+        function onDrop(source, target) {
+            // see if the move is legal
+            console.log(typeof(source), source, target)
+            console.log(legal_knight_move(source, target))
+            if(!legal_knight_move(source,target)){
+                return 'snapback';
+            }
+            if(legal_queen_move(queen_position,target)){
+                return 'snapback';
+            }
+            knight_position = target
+            
+            $( ".square-" + target )[0].classList.add('highlight')
+
+            //return legal_knight_move(source, target)
+            // var move = game.move({
+            //     from: source,
+            //     to: target,
+            //     promotion: 'q' // NOTE: always promote to a queen for example simplicity
+            // })
+
+            // // illegal move
+            // if (move === null) return 'snapback'
+
+            // updateStatus()
+        }
+
+        // update the board position after the piece snap
+        // for castling, en passant, pawn promotion
+        function onSnapEnd() {
+            // board.position(game.fen())
+        }
+
+        // function updateStatus() {
+        //     var status = ''
+
+        //     var moveColor = 'White'
+        //     if (game.turn() === 'b') {
+        //         moveColor = 'Black'
+        //     }
+
+        //     // checkmate?
+        //     if (game.in_checkmate()) {
+        //         status = 'Game over, ' + moveColor + ' is in checkmate.'
+        //     }
+
+        //     // draw?
+        //     else if (game.in_draw()) {
+        //         status = 'Game over, drawn position'
+        //     }
+
+        //     // game still on
+        //     else {
+        //         status = moveColor + ' to move'
+
+        //         // check?
+        //         if (game.in_check()) {
+        //             status += ', ' + moveColor + ' is in check'
+        //         }
+        //     }
+
+        //     $status.html(status)
+        //     $fen.html(game.fen())
+        //     $pgn.html(game.pgn())
+        // }
+
+        
+        // board = Chessboard('myBoard', config)
+        var knight_position = 'h8'
+        var queen_position = 'd5'
+        var config = {
+            draggable: true,
+            position: { [knight_position] : 'bN', [queen_position]: 'wQ'},
+            onDragStart: onDragStart,
+            onDrop: onDrop,
+            onSnapEnd: onSnapEnd
+        }
+        var board = Chessboard('myBoard',config);
+        $( ".square-" + knight_position )[0].classList.add('highlight')
+        // updateStatus()
+        // --- End Example JS ----------------------------------------------------------
+
+
+
+
+    </script>
+
+</body>
+
+</html>

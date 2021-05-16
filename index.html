@@ -104,22 +104,28 @@
             if (target_position=='a1')
                 return;
             while(true){
-                if(target_position[1] != '1'){
-                    target_position = target_position[0]+(target_position[1]-1)
-                } else{
-                    //abcdefgh
-                    if(target_position[0]=='h'){ target_position = 'g8'}
-                    if(target_position[0]=='g'){ target_position = 'f8'}
-                    if(target_position[0]=='f'){ target_position = 'e8'}
-                    if(target_position[0]=='e'){ target_position = 'd8'}
-                    if(target_position[0]=='d'){ target_position = 'c8'}
-                    if(target_position[0]=='c'){ target_position = 'b8'}
-                    if(target_position[0]=='b'){ target_position = 'a8'}
+                if (target_position[0] != 'a'){
+                    target_position = String.fromCharCode(target_position.charCodeAt(0)-1) + target_position[1]
+                } else {
+                    target_position = 'g' + (target_position[1]-1)
                 }
-                if(legal_queen_move(queen_position, target_position)){
+                // if(target_position[1] != '1'){
+                //     target_position = target_position[0]+(target_position[1]-1)
+                // } else{
+                //     //abcdefgh
+                //     if(target_position[0]=='h'){ target_position = 'g8'}
+                //     if(target_position[0]=='g'){ target_position = 'f8'}
+                //     if(target_position[0]=='f'){ target_position = 'e8'}
+                //     if(target_position[0]=='e'){ target_position = 'd8'}
+                //     if(target_position[0]=='d'){ target_position = 'c8'}
+                //     if(target_position[0]=='c'){ target_position = 'b8'}
+                //     if(target_position[0]=='b'){ target_position = 'a8'}
+                // }
+                if(!legal_queen_move(queen_position, target_position)){
                     break;
                 }
             }
+            console.log('target position: ', target_position);
         }
 
         var knight_position = 'h8'

@@ -122,6 +122,7 @@
                 //     if(target_position[0]=='b'){ target_position = 'a8'}
                 // }
                 if(!legal_queen_move(queen_position, target_position)){
+                    console.log('target skipped: ', target_position);
                     break;
                 }
             }

@@ -121,7 +121,7 @@
                 //     if(target_position[0]=='c'){ target_position = 'b8'}
                 //     if(target_position[0]=='b'){ target_position = 'a8'}
                 // }
-                if(legal_queen_move(queen_position, target_position)){
+                if(!legal_queen_move(queen_position, target_position)){
                     break;
                 }
                 console.log('target skipped: ', target_position);
